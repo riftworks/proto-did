@@ -10,7 +10,7 @@ private key) and the DID (public key).
 
 > The `PDID` concept will only be used in this document.
 
-## How it is used?
+## How is it used?
 
 `did://` URLs are formatted as `did://<address>/` or `did://<dns>:<common_name>/`
 . This difference allows for some DWNs to be targeted using common names (such
