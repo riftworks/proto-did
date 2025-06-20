@@ -1,26 +1,36 @@
+#[macro_use] extern crate log;
+
 use std::collections::HashMap;
+use identity::DIDIdentity;
+use req::{reqres::{DIDRequest, DIDResponse}, uri::DIDUri, verbs::ReqVerb};
+use tcp::listener::tcp_server;
 
-use req::{requests::Request, uri::DIDUri, verbs::ReqVerb};
-
+mod tcp;
 mod req;
 mod error;
-
-#[derive(Clone)]
-pub struct Response {
-    pub content: String
-}
+mod identity;
 
 /// Contains the configuration of the whole server.
-pub struct DIDServer {
+pub struct DIDServer<'s> {
     pub port: usize,
-    pub routes: HashMap<DIDUri, fn(Request) -> dyn Future<Output = Response>>
+    pub routes: HashMap<
+        DIDUri, fn(DIDRequest) -> dyn Future<Output = DIDResponse<'s>>>,
+    pub identity: DIDIdentity,
+    pub http_enabled: bool,
+    pub did_enabled: bool
 }
 
-impl DIDServer {
+impl<'s> DIDServer<'s> {
     pub fn build() -> Self {
+        env_logger::init();
         DIDServer {
             port: 5173,
-            routes: HashMap::new()
+            routes: HashMap::new(),
+            identity: DIDIdentity {
+                did: "imapotato".to_string()
+            },
+            http_enabled: true,
+            did_enabled: true
         }
     }
 
@@ -34,7 +44,7 @@ impl DIDServer {
         &mut self,
         verb: ReqVerb,
         path: &str,
-        cb: fn(Request) -> dyn Future<Output = Response>
+        cb: fn(DIDRequest) -> dyn Future<Output = DIDResponse<'s>>
     ) -> &mut Self {
         self.routes.insert(DIDUri {
             url: None,
@@ -59,7 +69,9 @@ impl DIDServer {
     ///         .await
     ///  }
     /// ```
-    pub async fn launch() {
-        
+    pub async fn launch(&self) {
+        tcp_server(self.port, self.identity.clone())
+            .await
+            .expect("TcpServer error!");
     }
 }
