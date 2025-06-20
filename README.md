@@ -114,7 +114,7 @@ Every request is formatted as, with commas as separators for identites and
 two new lines to separate the identity from the body.
 
 ```
-<URL>,<DID>,<IP>,<VERB>
+<VERB>,<URL>,<DID>,<IP>
 
 <BODY>
 ```
@@ -130,7 +130,7 @@ The `PREFLIGHT` process is done in multiple phases:
 2. The server sends a reduced header and its ECDHE public key with the signature
     made with its PDID
 ```
-<DID>,<IP>,<VERB>
+<VERB>,<DID>,<IP>
 
 ECDH_ONLY
 <ECDH_SESSION_PUBLIC_KEY>
@@ -149,7 +149,7 @@ ECDH_ONLY
 7. The server sends a request to let the target verify its DID identity with a 
     part of its AR table for the sake of neighboring good practices.
 ```
-<URL>,<DID>,<IP>,<VERB>
+<VERB>,<URL>,<DID>,<IP>
 
 DID_PROOF
 <ZK_PROOF_OF_MASTER_KEY>
@@ -166,7 +166,7 @@ DID_PROOF
     neighbors availability, the server must send the following content to the
     target which will close the connection.
 ```
-<URL>,<DID>,<IP>,<VERB>
+<VERB>,<URL>,<DID>,<IP>
 
 NEIGHBORING_ONLY
 ```
