@@ -1,5 +1,5 @@
-use tokio::{io::{self, AsyncReadExt}, net::{TcpListener, TcpStream}};
-use crate::{error::DIDError, identity::DIDIdentity};
+use tokio::{io, net::{TcpListener, TcpStream}};
+use crate::{error::DIDError, identity::DIDIdentity, tcp::stream::read_expected_size};
 use super::did::DIDHandler;
 
 pub(super) trait StreamHandler<'h>: Sized {
@@ -23,9 +23,7 @@ pub(super) trait StreamHandler<'h>: Sized {
 /// All requests with the first line's items separated by " " and starting
 /// with a HTTP method will be handled by `http_stream_handler`.
 async fn redirect_to_handler(mut sock: TcpStream, identity: DIDIdentity) {
-    let mut content = String::new();
-
-    sock.read_to_string(&mut content).await.unwrap();
+    let content = read_expected_size(&mut sock).await;
     if DIDHandler::get_header_method(&content).is_ok() {
         let handler = DIDHandler::from_req_and_stream(content, sock);
 
