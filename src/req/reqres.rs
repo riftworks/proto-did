@@ -7,6 +7,7 @@ pub struct DIDRequest {
     pub url: Option<Url>,
     pub verb: ReqVerb,
     pub did: String,
+    pub req_size: usize,
     pub ip: Ipv4Addr,
     pub body: String
 }
@@ -29,6 +30,7 @@ impl FromStr for DIDRequest {
         let mut did = header.next();
         let ip = Ipv4Addr::from_str(header.next().get_or_insert_default())
             .unwrap();
+        let size = usize::from_str(header.next().get_or_insert("0")).unwrap();
 
         header.next();
 
@@ -36,10 +38,38 @@ impl FromStr for DIDRequest {
 
         Ok(DIDRequest {
             verb, ip,
+            req_size: size,
             url: if url.is_err() { None } else { Some(url.unwrap()) },
             did: did.get_or_insert_default().to_string(),
             body: body.get_or_insert_default().to_string()
         })
+    }
+}
+
+impl Display for DIDRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let url_insert = if self.url.is_some() {
+            format!("{},", self.url.clone().unwrap())
+        } else {
+            String::new()
+        };
+
+        let size = self.verb.to_string().len() +
+            self.did.to_string().len() +
+            self.ip.to_string().len() +
+            self.body.len() +
+            url_insert.len() + 2;
+
+        let size = size + size.to_string().len();
+
+        write!(f, "{},{}{},{},{}\n\n{}", 
+            self.verb,
+            url_insert,
+            self.did,
+            self.ip,
+            size,
+            self.body
+        ) 
     }
 }
 
@@ -51,11 +81,20 @@ impl<'r> Display for DIDResponse<'r> {
             String::new()
         };
 
-        write!(f, "{},{}{},{}\n\n{}", 
+        let size = self.from_req.verb.to_string().len() +
+            self.from_req.did.to_string().len() +
+            self.from_req.ip.to_string().len() +
+            self.content.len() +
+            url_insert.len() + 2;
+
+        let size = size + size.to_string().len();
+
+        write!(f, "{},{}{},{},{}\n\n{}", 
             self.from_req.verb,
             url_insert,
             self.from_req.did,
             self.from_req.ip,
+            size,
             self.content
         ) 
     }
