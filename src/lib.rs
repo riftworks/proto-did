@@ -5,7 +5,7 @@ use identity::DIDIdentity;
 use req::{reqres::{DIDRequest, DIDResponse}, uri::DIDUri, verbs::ReqVerb};
 use tcp::listener::tcp_server;
 
-mod cli;
+pub mod cli;
 mod tcp;
 mod req;
 mod error;
