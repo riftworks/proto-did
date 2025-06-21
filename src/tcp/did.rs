@@ -38,13 +38,23 @@ impl<'h> StreamHandler<'h> for DIDHandler {
     async fn handle_stream(
         &mut self, identity: DIDIdentity
     ) -> Result<(), DIDError> {
-        loop {
-            let mut req_str = String::new();
-            let socket = &mut self.sock;
+        let socket = &mut self.sock;
+        let mut req_str = String::new();
+        let res = DIDHandler::process_latest_request(
+            &self.latest_req, &identity
+        );
 
+        socket.writable().await.unwrap();
+        socket.write_all(res.to_string().as_bytes()).await.unwrap();
+
+        loop {
             socket.readable().await.unwrap();
             socket.read_to_string(&mut req_str).await.unwrap();
-            
+
+            if req_str.is_empty() {
+                continue
+            }
+
             if let Ok(req) = DIDRequest::from_str(&req_str) {
                 if req.ip != self.latest_req.ip {
                     error!("{}: {}", self.latest_req.ip, "IP mismatch");
@@ -56,7 +66,6 @@ impl<'h> StreamHandler<'h> for DIDHandler {
                     socket.writable().await.unwrap();
                     socket.write_all(res.to_string().as_bytes()).await.unwrap();
                     self.latest_req = req;
-                    
                 }
             } else {
                 error!(
