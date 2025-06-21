@@ -121,7 +121,8 @@ two new lines to separate the identity from the body.
 
 The header contains the verb, the url, the sender DID, the sender IP and the
 size. The size property is used to notify the receiver of the size of the
-request.
+request since TCP/IP does not have a way of notifying for the end of a request
+since it's... a stream.
 
 ### `PREFLIGHT`
 
