@@ -58,7 +58,7 @@ impl Display for DIDRequest {
             self.did.to_string().len() +
             self.ip.to_string().len() +
             self.body.len() +
-            url_insert.len() + 2;
+            url_insert.len() + 5;
 
         let size = size + size.to_string().len();
 
@@ -85,7 +85,7 @@ impl<'r> Display for DIDResponse<'r> {
             self.from_req.did.to_string().len() +
             self.from_req.ip.to_string().len() +
             self.content.len() +
-            url_insert.len() + 2;
+            url_insert.len() + 5;
 
         let size = size + size.to_string().len();
 
