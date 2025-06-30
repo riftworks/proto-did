@@ -18,7 +18,6 @@ as `did://rift:google`) without any issues. The common name method implies
 however the existence of a federated DNS record to store without altering the
 common name's DWN reference. The `dns` part of a common name refers to the DNS
 service to use:
-- `rift` is not a valid DNS service!
 - An **Address Record** (AR) is DNS-like table where neighbors are stored. It
     is explained in more details below.
 - A DNS address syntax has to be either <domain_name> or <domain_name>:<tld>.
@@ -191,6 +190,14 @@ NEIGHBORING_ONLY
 
 **This way, there is no reason to reauthenticate DIDs for procedures, since 
 they are always authenticated.**
+
+#### Session caching
+
+TCP/IP sessions can be opened for as long as possible without data exchange. In
+the context of the `did://` protocol, sessions are kept active for 8 hours and
+do not require a new `PREFLIGHT`. As TCP/IP currently supports 64K simultaneous
+connections, we hold as much connections as possible, and we start closing the
+oldest ones when we reach the maximum.
 
 ### The body part
 
