@@ -851,7 +851,12 @@ and a log.
 # Roadmap
 
 - [ ] Add support for data fetching and receiving through socket connections
-    - [ ] Basic socket connections
+    - [x] Basic socket connections
+    - [x] Socket session caching
+    > [!NOTE]
+    > Although implemented in the tcp server, socket session caching may
+    > require to be linked to a DID to be useful since they are only socket
+    > bound for now.
     - [ ] Request/response parsing and formatting
         - [ ] `did://` formatting
     - [ ] Support for protocol verbs
