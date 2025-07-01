@@ -1,6 +1,13 @@
 use std::str::FromStr;
-use tokio::{io::{AsyncReadExt, AsyncWriteExt}, net::TcpStream};
-use crate::{error::DIDError, identity::DIDIdentity, req::{reqres::{DIDRequest, DIDResponse}, verbs::ReqVerb}};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::TcpStream,
+    sync::oneshot::Receiver};
+use crate::{
+    error::DIDError,
+    identity::DIDIdentity,
+    req::{reqres::{DIDRequest, DIDResponse},
+    verbs::ReqVerb}};
 use super::listener::StreamHandler;
 
 pub(super) struct DIDHandler {
@@ -34,9 +41,11 @@ impl<'h> StreamHandler<'h> for DIDHandler {
         ReqVerb::from_str(items[0])
     }
 
-    /// When dealing with a DID TCP stream
+    /// When dealing with a DID TCP stream. This function receives a channel
+    /// receiver to receive messages from the main thread to end when the port
+    /// should be allocated to a new connection.
     async fn handle_stream(
-        &mut self, identity: DIDIdentity
+        &mut self, identity: DIDIdentity, mut rx: Receiver<u8>
     ) -> Result<(), DIDError> {
         let socket = &mut self.sock;
         let mut req_str = String::new();
@@ -48,6 +57,13 @@ impl<'h> StreamHandler<'h> for DIDHandler {
         socket.write_all(res.to_string().as_bytes()).await.unwrap();
 
         loop {
+            // If we receive something from the oneshot, we know we have to
+            // close the socket to free the associated port.
+            if let Ok(_) = rx.try_recv() {
+                socket.shutdown().await.unwrap();
+                return Ok(());
+            }
+
             socket.readable().await.unwrap();
             socket.read_to_string(&mut req_str).await.unwrap();
 

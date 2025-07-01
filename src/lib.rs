@@ -17,6 +17,8 @@ pub struct DIDServer<'s> {
     pub routes: HashMap<
         DIDUri, fn(DIDRequest) -> dyn Future<Output = DIDResponse<'s>>>,
     pub identity: DIDIdentity,
+    /// Determines if the server is allowed to use HTTP for DID DNS reach out
+    /// and DID to device communication.
     pub http_enabled: bool,
     pub did_enabled: bool
 }
