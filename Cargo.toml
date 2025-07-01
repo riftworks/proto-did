@@ -10,5 +10,6 @@ cli = []
 [dependencies]
 env_logger = "0.11.8"
 log = "0.4.27"
+rlimit = "0.10.2"
 tokio = {version = "1", features = ["full"]}
 url = "2.5.4"
