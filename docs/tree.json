@@ -7,27 +7,27 @@
                 "title": "About This Protocol",
                 "type": "page",
                 "url": "/docs/proto-did/getting-started/about"
+            }
+        ]
+    },
+    {
+        "title": "Setup",
+        "type": "section",
+        "children": [
+            {
+                "title": "JavaScript",
+                "type": "page",
+                "url": "/docs/proto-did/getting-started/setup/javascript"
             },
             {
-                "title": "Setup",
-                "type": "section",
-                "children": [
-                    {
-                        "title": "JavaScript",
-                        "type": "page",
-                        "url": "/docs/proto-did/getting-started/setup/javascript"
-                    },
-                    {
-                        "title": "Rust",
-                        "type": "page",
-                        "url": "/docs/proto-did/getting-started/setup/rust"
-                    },
-                    {
-                        "title": "C",
-                        "type": "page",
-                        "url": "/docs/proto-did/getting-started/setup/c"
-                    }
-                ]
+                "title": "Rust",
+                "type": "page",
+                "url": "/docs/proto-did/getting-started/setup/rust"
+            },
+            {
+                "title": "C",
+                "type": "page",
+                "url": "/docs/proto-did/getting-started/setup/c"
             }
         ]
     },
