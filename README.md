@@ -20,7 +20,7 @@ common name's DWN reference. The `dns` part of a common name refers to the DNS
 service to use:
 - An **Address Record** (AR) is DNS-like table where neighbors are stored. It
     is explained in more details below.
-- A DNS address syntax has to be either <domain_name> or <domain_name>:<tld>.
+- A DNS address syntax has to be either `<domain_name>` or `<domain_name>:<tld>`.
     If the domain name is under the `.com` TLD, services will automatically look
     for them.
 - CommonRift Web5's DNS holds a AR of every DWN that connected to them and
@@ -857,7 +857,7 @@ and a log.
     > Although implemented in the tcp server, socket session caching may
     > require to be linked to a DID to be useful since they are only socket
     > bound for now.
-    - [ ] Request/response parsing and formatting
+    - [-] Request/response parsing and formatting
         - [ ] `did://` formatting
     - [ ] Support for protocol verbs
     - [ ] `PREFLIGHT` handshake process
