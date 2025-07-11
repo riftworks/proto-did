@@ -6,7 +6,7 @@
             {
                 "title": "About This Protocol",
                 "type": "page",
-                "url": "/docs/proto-did/getting-started/about",
+                "url": "/docs/proto-did/getting-started/about"
             },
             {
                 "title": "Setup",
